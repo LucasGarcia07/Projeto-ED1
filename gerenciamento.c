@@ -49,16 +49,45 @@ Arv* criarNo(void* val){
 	return novo;
 }
 
-void insereNo(Arv* noEntrada, Arv* arvore, char texto[]){
-	Arv* noPai = busca(arvore, texto[]);
+Arv* busca(Arv* arvore, char* nome)
+{
+	Arv* noAux = arvore;
+	while(noAux->info->nome != noEntrada->info->nome)
+	{
+		Arv* noAux2 = noAux;
+		
+		while(strcmp(noAux2->info->nome, noEntrada->info->nome) != 0 && noAux2 != NULL)
+		{
+			noAux2 = noAux2->irmao;
+		}
+		if(strcmp(noAux2->info->nome, noEntrada->info->nome) == 0)
+		{
+			return noAux2;
+		}
+		noAux = noAux ->filho;
+	}
+	if(strcmp(noAux->info->nome, noEntrada->info->nome) == 0)
+	{
+		return noAux;
+	}
+}
+
+void insereNo(Arv* noEntrada, Arv* arvore, char* nome)
+{
+	Arv* noPai = busca(arvore, nome);
 	Arv* noAux;
 
-	if(noPai->filho != NULL){
-		for(noAux = noPai->filho->irmao; noAux != NULL; noAux = noAux->irmao){
-			if(noAux)
+	if(noPai->filho != NULL)
+	{
+		for(noAux = noPai->filho->irmao; noAux != NULL; noAux = noAux->irmao)
+		{
 		}
+		if(noAux == NULL)
+		{
+			noAux->irmao = noEntrada;
+		}
+	}else
+	{
+		noPai->filho = noEntrada; 
 	}
-
-
-
 }
