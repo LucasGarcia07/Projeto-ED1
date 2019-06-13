@@ -1,5 +1,5 @@
 # AAED1
--[ ]identificar entrada
+- [ ]identificar entrada
 -[ ]inserir
 -[ ]destruir
 -[ ]buscar
