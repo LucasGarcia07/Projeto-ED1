@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <time.h>//biblioteca para pegar a data e hora do sistema
 
 	struct tm* data_hora_atual;//estrutura de data e hora do sistema
