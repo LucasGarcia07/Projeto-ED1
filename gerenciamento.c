@@ -62,3 +62,4 @@ void insereNo(Arv* noEntrada, Arv* arvore, char texto[]){
 
 
 }
+teste
