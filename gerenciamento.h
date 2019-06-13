@@ -10,7 +10,7 @@
 
 	struct diretorio{
 
-		char nome;
+		char* nome;
 		int numArq, numDire;
 
 	};
