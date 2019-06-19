@@ -17,24 +17,27 @@ int qual_tipo(char val){//estava usando essa função para descobrir se era arqu
 	}
 }
 
-Diretorio* alocarDiretorio(char nome){
+Diretorio* alocarDiretorio(char* nome, int numArq, char* data, char*hora){
 		Diretorio* dir;
 
 		dir = (Diretorio*) malloc(sizeof(Diretorio));
-		dir->nome = nome;
-		dir->numArq = 0;
-		dir->numDire = 0;
+		strcpy(dir->nome, nome);
+		strcpy(dir->data, data);
+		strcpy(dir->hora, hora);
+		dir->numArqDir= numArqDir;
 
 		return dir;
 }
 
-Arquivo* alocarArquivo(char nome, char tipo){
+Arquivo* alocarArquivo(char* nome, char tipo){
 
 		Arquivo* arq;
 
 		arq = (Arquivo*) malloc(sizeof(Arquivo));
-		arq->nome = nome;
-		arq->tipo = tipo;
+		strcpy(dir->nome, nome);
+		strcpy(dir->tipo, tipo);
+		strcpy(dir->data, data);
+		strcpy(dir->hora, hora);
 
 		return arq;
 }
@@ -51,44 +54,97 @@ Arv* criarNo(void* val){
 
 Arv* busca(Arv* arvore, char* nome1)
 {
-	Arv* noAux = arvore;
-	while(((Diretorio*)noAux->info)->nome != nome1)
+	if(strcmp(((Diretorio*)arvore->info)->nome, nome1) != 0)
 	{
-		Arv* noAux2 = noAux;
-		
-		while(strcmp(((Diretorio*)noAux->info)->nome, nome1) != 0 && noAux2 != NULL)
+		if(arvore->filho != NULL)
 		{
-			noAux2 = noAux2->irmao;
+			busca(arvore->filho, nome1);
 		}
-		if(strcmp(((Diretorio*)noAux->info)->nome, nome1) == 0)
+		if(arvore->irmao != NULL)
 		{
-			return noAux2;
+			busca(arvore->irmao, nome1);
 		}
-		noAux = noAux ->filho;
 	}
-	if(strcmp(((Diretorio*)noAux->info)->nome, nome1) == 0)
+	else
 	{
-		return noAux;
+		return arvore;
 	}
+	
 }
 
-void insereNo(Arv* noEntrada, Arv* arvore, char* nome)
-{
+void insereNo(Arv* noEntrada, Arv* arvore, char* nome){
 	Arv* noPai = busca(arvore, nome);
 	Arv* noAux;
 
-	if(noPai->filho != NULL)
-	{
-		for(noAux = noPai->filho->irmao; noAux != NULL; noAux = noAux->irmao)
-		{
+	if(noPai->filho != NULL){
+		for(noAux = noPai->filho->irmao; noAux != NULL; noAux = noAux->irmao){
+			if(noAux == NULL){
+				noAux->irmao = noEntrada;
+			}
 		}
-		if(noAux == NULL)
-		{
-			noAux->irmao = noEntrada;
-		}
-	}else
-	{
+	}
+	else{
 		noPai->filho = noEntrada; 
 	}
 
 }
+
+void* renomear(Arv* arvore, char* nome, char* novoNome,char* data, char* hora,char* noPai){
+	Arv* noAux = busca(arvore,nome);
+	Arv* noAux2 = busca(arvore,noPai);
+	if(noAux == NULL || noAux2 == NULL){
+		return NULL;
+	}
+	if(noAux->tipo == 1){
+		(((Diretorio*)noAux->info)->nome) = novoNome;
+		(((Diretorio*)noAux->info)->data) = data;
+		(((Diretorio*)noAux->info)->hora) = hora;
+	}
+	
+	if(noAux->tipo == 2){
+		(((Arquivo*)noAux->info)->nome) = novoNome;
+		(((Arquivo*)noAux->info)->data) = data;
+		(((Arquivo*)noAux->info)->hora) = hora;
+		(((Diretorio*)noAux2->info)->data) = data;
+		(((Diretorio*)noAux2->info)->hora) = hora;
+	}	
+}
+
+void* transformar(Arv* arvore, char tipo,char* data, char* hora,char* noPai,char* nome){
+	Arv* noAux = busca(arvore,nome);
+	Arv* noAux2 = busca(arvore,noPai);
+	if(noAux == NULL || noAux == NULL){
+		return NULL;
+	}
+
+	if( (((Arquivo*)noAux->info)->tipo) == tipo){
+		printf("Arquivo ja e do tipo inserido.");
+		return NULL;
+	}
+
+	else{	
+		(((Arquivo*)noAux->info)->tipo) = tipo;
+		(((Arquivo*)noAux->info)->data) = data;
+		(((Arquivo*)noAux->info)->hora) = hora;
+		(((Diretorio*)noAux2->info)->data) = data;
+		(((Diretorio*)noAux2->info)->hora) = hora;
+	}
+}
+
+void destruir(Arv* NO){
+
+	Arv *NOF = NO->filho;
+	Arv *NOI = NO->irmao;
+	free(NO);
+	if(NOF != NULL)
+	{
+		destruir(NOF);
+	}
+	if(NOI != NULL)
+	{	
+		destruir(NOI);
+	}
+
+}
+
+
